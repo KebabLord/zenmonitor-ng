@@ -10,6 +10,7 @@
 #include "zenmonitor.h"
 
 gboolean display_coreid = 0;
+gboolean run_once = 0;
 gdouble delay = 0.5;
 gchar *file = "";
 SensorDataStore *store;
@@ -22,6 +23,8 @@ static GOptionEntry options[] = {
      "Interval of refreshing informations", "SECONDS"},
     {"coreid", 'c', 0, G_OPTION_ARG_NONE, &display_coreid,
      "Display core_id instead of core index", NULL},
+    {"runonce", 'q', 0, G_OPTION_ARG_NONE, &run_once,
+     "Run only once and quit", NULL},
     {NULL}};
 
 static SensorSource sensor_sources[] = {
@@ -166,6 +169,8 @@ void start_watching()
     while(!quit)
     {
         update_data();
+        if (run_once)
+            break;
         usleep(delay * 1000 * 1000);
     }
 }
